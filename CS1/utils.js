@@ -1,6 +1,27 @@
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./db/app.db');
 
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory');
+const Data = sequelize.define('Data', {
+    id: {
+        type: DataTypes.STRING,
+        primaryKey: true
+    },
+    url: DataTypes.STRING,
+});
+
+async function initializeDatabase() {
+    try {
+        await sequelize.sync();
+        console.log("Database & tables created!");
+    } catch (err) {
+        console.error("Error creating database:", err);
+    }
+}
+
+initializeDatabase();
+
 db.run(`
         CREATE TABLE IF NOT EXISTS data(
         id TEXT,
@@ -20,6 +41,24 @@ function makeID(length) {
     return result;
 }
 
+function findOriginORM(idx) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await Data.findOne({
+                where: { id: idx },
+                attributes: ['url']
+            });
+            if (data) {
+                resolve(data.url);
+            } else {
+                resolve(null);
+            }
+        } catch (err) {
+            reject(err.message);
+        } 
+    });
+}
+
 function findOrigin(id) {
     return new Promise((resolve, reject) => {
         return db.get(`SELECT * FROM data WHERE id = ?`, [id], function (err, res) {
@@ -35,6 +74,23 @@ function findOrigin(id) {
     });
 }
 
+function createORM(idx, urlx) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await Data.create(
+                { id: idx,
+                  url: urlx
+                }
+            );
+            data.save();
+            console.log(idx);
+            resolve(idx);
+        } catch (err) {
+            reject(err.message);
+        } 
+    });
+}
+
 function create(id, url) {
     return new Promise((resolve, reject) => {
         return db.run(`INSERT INTO data VALUES (?, ?)`, [id, url], function (err) {
@@ -44,19 +100,20 @@ function create(id, url) {
             return resolve(id);
         });
     });
-}
+}   
 
 async function shortUrl(url) {
     while (true) {
         let newID = makeID(5);
-        let originUrl = await findOrigin(newID);
-        if (originUrl == null);
-        await create(newID, url)
+        // let originUrl = await findOrigin(newID);
+        // console.log("OriginUrl", originUrl);
+        // if (originUrl == null);
+        await createORM(newID, url);
         return newID;
     }
 }
 
 module.exports = {
-    findOrigin,
+    findOriginORM,
     shortUrl
 }

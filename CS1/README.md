@@ -20,6 +20,9 @@ $ npm start
 
 ## Yêu cầu
  - Tối ưu chương trình trên (nếu cảm thấy cần thiết)
+ * có dấu chấm phẩy dòng 53 utils.js
+ * chỉnh từ post sang get trong creates
+ * bỏ originURL trong code shortURL
  - Triển khai thành web hoàn chỉnh (tuỳ chọn)
  - Thêm lớp persistent bằng cách sử dụng ORM (Object-Relational Mapping)
  - *Đánh giá* và *cải tiến* hiệu năng dựa trên một mẫu kiến trúc tuỳ chọn.

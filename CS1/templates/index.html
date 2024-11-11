@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; }
+        label, input, button { display: block; width: 100%; margin: 10px 0; }
+        #result { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <form id="urlForm">
+        <label for="url">Enter the URL to shorten:</label>
+        <input type="url" id="url" name="url" required>
+        <button type="submit">Shorten URL</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('urlForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const url = document.getElementById('url').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Processing...';
+
+            try {
+                // Send a GET request to /create with the URL as a query parameter
+                const response = await fetch(`/create?url=${url}`);
+                
+                if (response.ok) {
+                    const shortId = await response.text(); // Assuming it returns only the ID (e.g., "abc123")
+                    const shortUrl = `${window.location.origin}/short/${shortId}`; // Full shortened URL
+                    resultDiv.innerHTML = `<p>Shortened URL: <a href="${shortUrl}" target="_blank">${shortUrl}</a></p>`;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">Error: Could not shorten the URL.</p>`;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                resultDiv.innerHTML = `<p style="color: red;">An error occurred: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
