@@ -1,4 +1,4 @@
-import { Kafka } from "kafkajs";
+import { Kafka, Partitioners  } from "kafkajs";
 
 class KafkaConfig {
   constructor() {
@@ -6,16 +6,18 @@ class KafkaConfig {
       clientId: "nodejs-kafka",
       brokers: ["localhost:9092"],
     });
-    this.producer = this.kafka.producer();
+    this.producer = this.kafka.producer({
+      createPartitioner: Partitioners.LegacyPartitioner
+    });
     this.consumer = this.kafka.consumer({ groupId: "test-group" });
   }
 
-  async produce(topic, messages) {
+  async produce(topic, messages_) {
     try {
       await this.producer.connect();
       await this.producer.send({
         topic: topic,
-        messages: messages,
+        messages: messages_,
       });
     } catch (error) {
       console.error(error);
