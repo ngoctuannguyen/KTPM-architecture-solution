@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 
 // Kết nối MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/shorturl")
+  .connect(
+    "mongodb+srv://hungsinh2k4:hungbin123456@cluster0.nexwa.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0l"
+  )
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
