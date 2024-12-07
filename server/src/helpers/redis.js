@@ -1,7 +1,7 @@
-const redis = require("redis");
+import { createClient } from "redis";
 
 // Kết nối Redis
-const redisClient = redis.createClient({
+const redisClient = createClient({
   password: "y7LDDpZhdVT6D6yIFaXeA8UjiZlUJlbI",
   socket: {
     host: "redis-19563.c8.us-east-1-4.ec2.redns.redis-cloud.com",
@@ -12,7 +12,7 @@ const redisClient = redis.createClient({
 redisClient.on("connect", () => console.log("Redis connected!"));
 redisClient.on("error", (err) => console.error("Redis error:", err.message));
 
-async function connectRedis() {
+export async function connectRedis() {
   try {
     await redisClient.connect();
     console.log("Redis connection successful!");
@@ -26,11 +26,11 @@ async function connectRedis() {
   }
 }
 
-async function setCache(key, value, ttl = 3600) {
+export async function setCache(key, value, ttl = 3600) {
   await redisClient.set(key, value, { EX: ttl }); // TTL tính bằng giây
 }
 
-async function getCache(key) {
+export async function getCache(key) {
   try {
     const value = await redisClient.get(key);
     return value;
@@ -40,9 +40,4 @@ async function getCache(key) {
   }
 }
 
-module.exports = {
-  redisClient,
-  connectRedis,
-  setCache,
-  getCache,
-};
+export { redisClient };

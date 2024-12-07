@@ -1,6 +1,6 @@
-const { URLModel } = require("./src/helpers/mongodb");
-const { setCache, getCache } = require("./src//helpers/redis");
-const { connectRedis } = require("./src/helpers/redis");
+import { URLModel } from "./src/helpers/mongodb.js";
+import { setCache, getCache } from "./src//helpers/redis.js";
+import { connectRedis } from "./src/helpers/redis.js";
 
 // Tạo mã ngắn ngẫu nhiên
 function makeID(length) {
@@ -82,7 +82,4 @@ async function shortUrl(url) {
   }
 }
 
-module.exports = {
-  findOrigin,
-  shortUrl,
-};
+export { findOrigin, shortUrl };

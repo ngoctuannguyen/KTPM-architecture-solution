@@ -1,8 +1,9 @@
-const express = require("express");
-const { shortUrl, findOrigin } = require("./utils");
+import express from "express";
+import { shortUrl, findOrigin } from "./utils.js";
+import cors from "cors"; // Thêm vào
 // const { connectRedis, getCache } = require("./src/helpers/redis");
+
 const app = express();
-const cors = require("cors"); // Thêm vào
 const port = 3000;
 
 app.use(express.json()); // Hỗ trợ body dạng JSON

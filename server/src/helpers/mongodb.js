@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Kết nối MongoDB
 mongoose
@@ -16,6 +16,4 @@ const urlSchema = new mongoose.Schema({
 
 const URLModel = mongoose.model("URL", urlSchema);
 
-module.exports = {
-  URLModel,
-};
+export { URLModel };
