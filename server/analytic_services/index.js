@@ -1,3 +1,4 @@
+//server/analytics_services/index.js
 import bodyParser from "body-parser";
 import express from "express";
 import constrollers from "./controller.js";

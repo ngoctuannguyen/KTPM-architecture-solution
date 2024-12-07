@@ -6,16 +6,28 @@ import { connectRedis } from "./src/helpers/redis.js";
 function makeID(length) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
+  // let result = "";
+  // for (let i = 0; i < length; i++) {
+  //   result += characters.charAt(Math.floor(Math.random() * characters.length));
+  // }
+  // return result;
+  const charactersLength = characters.length;
+  return Array.from(
+    { length },
+    () => characters[Math.floor(Math.random() * charactersLength)]
+  ).join("");
 }
 
-(async () => {
-  await connectRedis(); // Kiểm tra kết nối Redis
-})();
+// Kết nối tới Redis
+async function ensureRedisConnection() {
+  try {
+    await connectRedis();
+    console.log("Connected to Redis.");
+  } catch (err) {
+    console.error("Failed to connect to Redis:", err.message);
+  }
+}
+ensureRedisConnection();
 
 // Tìm URL gốc từ short ID
 async function findOrigin(id) {
@@ -23,10 +35,8 @@ async function findOrigin(id) {
     console.log("Finding origin for ID:", id);
     // Kiểm tra Redis cache trước
     const cachedUrl = await getCache(id);
-    const res = cachedUrl;
-    console.log(cachedUrl);
-    if (res) {
-      return res;
+    if (cachedUrl) {
+      return cachedUrl;
     }
 
     // Nếu không có trong Redis, truy vấn MongoDB
@@ -41,9 +51,22 @@ async function findOrigin(id) {
   }
 }
 
+// Kiểm tra URL hợp lệ
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 // Tạo short URL
 async function create(id, url) {
   try {
+    if (!isValidUrl(url)) {
+      throw new Error("Invalid URL provided.");
+    }
     const newEntry = new URLModel({ id, url });
     await newEntry.save();
     console.log("Created new short URL:", id);
@@ -68,15 +91,29 @@ async function shortUrl(url) {
     if (existingEntry) {
       return existingEntry.id; // Trả về ID nếu URL đã tồn tại
     }
-    while (true) {
-      let newID = makeID(5);
-      let originUrl = await findOrigin(newID);
-      if (!originUrl) {
-        // Chỉ tạo ID mới khi nó chưa tồn tại
+    // while (true) {
+    //   let newID = makeID(5);
+    //   let originUrl = await findOrigin(newID);
+    //   if (!originUrl) {
+    //     // Chỉ tạo ID mới khi nó chưa tồn tại
+    //     await create(newID, url);
+    //     return newID; // Đảm bảo trả về ID mới
+    //   }
+    // }
+
+    // giới hạn số lần thử tránh vòng lặp vô hạn
+    for (let attempt = 0; attempt < 10; attempt++) {
+      // Giới hạn 10 lần thử
+      const newID = makeID(5);
+      const isUnique = !(await URLModel.exists({ id: newID }));
+      if (isUnique) {
         await create(newID, url);
-        return newID; // Đảm bảo trả về ID mới
+        return newID;
       }
     }
+    throw new Error(
+      "Unable to generate a unique short ID after multiple attempts."
+    );
   } catch (err) {
     throw new Error("Error shortening URL: " + err.message);
   }
