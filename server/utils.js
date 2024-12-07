@@ -13,22 +13,9 @@ function makeID(length) {
   return result;
 }
 
-// (async () => {
-//   await connectRedis(); // Kiểm tra kết nối Redis
-// })();
-
-// const id = "X6ch6";
-// console.log("Cache");
-// async function exampleGetCache() {
-//   try {
-//     const value = await getCache(id);
-//     console.log(value); // In ra giá trị của key "X6ch6"
-//   } catch (err) {
-//     console.error("Error getting cache:", err.message);
-//   }
-// }
-
-// exampleGetCache();
+(async () => {
+  await connectRedis(); // Kiểm tra kết nối Redis
+})();
 
 // Tìm URL gốc từ short ID
 async function findOrigin(id) {
@@ -72,14 +59,26 @@ async function create(id, url) {
 
 // Rút gọn URL
 async function shortUrl(url) {
-  while (true) {
-    let newID = makeID(5);
-    let originUrl = await findOrigin(newID);
-    if (!originUrl) {
-      // Chỉ tạo ID mới khi nó chưa tồn tại
-      await create(newID, url);
-      return newID; // Đảm bảo trả về ID mới
+  try {
+    const cachedId = await getCache(url);
+    if (cachedId) {
+      return cachedId; // Trả về ID nếu URL đã tồn tại trong cache
     }
+    const existingEntry = await URLModel.findOne({ url });
+    if (existingEntry) {
+      return existingEntry.id; // Trả về ID nếu URL đã tồn tại
+    }
+    while (true) {
+      let newID = makeID(5);
+      let originUrl = await findOrigin(newID);
+      if (!originUrl) {
+        // Chỉ tạo ID mới khi nó chưa tồn tại
+        await create(newID, url);
+        return newID; // Đảm bảo trả về ID mới
+      }
+    }
+  } catch (err) {
+    throw new Error("Error shortening URL: " + err.message);
   }
 }
 

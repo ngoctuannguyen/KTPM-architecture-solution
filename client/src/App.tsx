@@ -37,6 +37,10 @@ function App() {
     try {
       const originalUrl = await getOriginalUrl(shortId); // Gọi service để lấy URL gốc
       console.log(originalUrl);
+      if (!originalUrl) {
+        setError("URL not found");
+        return;
+      }
       window.open(originalUrl, "_blank"); // Điều hướng đến URL gốc
     } catch (err: any) {
       setError(err.message);
@@ -63,7 +67,7 @@ function App() {
           <div className="result">
             <h2>Your Short URL:</h2>
             <p>
-              <a href={shortUrl} target="_blank" rel="noopener noreferrer">
+              <a href={url} target="_blank" rel="noopener noreferrer">
                 {shortUrl}
               </a>
             </p>
