@@ -1,3 +1,4 @@
+//utils.js
 import { URLModel } from "./src/helpers/mongodb.js";
 import { setCache, getCache } from "./src//helpers/redis.js";
 import { connectRedis } from "./src/helpers/redis.js";
@@ -68,9 +69,9 @@ async function create(id, url) {
       throw new Error("Invalid URL provided.");
     }
     const newEntry = new URLModel({ id, url });
+
     await newEntry.save();
     console.log("Created new short URL:", id);
-    console.log(url);
     // Lưu vào Redis cache
     await setCache(id, url);
 
@@ -85,6 +86,7 @@ async function shortUrl(url) {
   try {
     const cachedId = await getCache(url);
     if (cachedId) {
+      console.log("Found in cache:", cachedId);
       return cachedId; // Trả về ID nếu URL đã tồn tại trong cache
     }
     const existingEntry = await URLModel.findOne({ url });

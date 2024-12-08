@@ -5,9 +5,9 @@ import { redisClient } from "./redis.js"; // Tận dụng Redis client từ help
 const rateLimiter = new RateLimiterRedis({
   storeClient: redisClient,
   keyPrefix: "rate_limit",
-  points: 10, // Tối đa 10 requests mỗi 60 giây
+  points: 20, // Tối đa 10 requests mỗi 60 giây
   duration: 60,
-  blockDuration: 300, // Chặn trong 5 phút nếu vượt quá
+  blockDuration: 60, // Chặn trong 1 phút nếu vượt quá
 });
 
 // Middleware rate limiting

@@ -1,3 +1,4 @@
+//server.js
 import express from "express";
 import { shortUrl, findOrigin } from "./utils.js";
 import cors from "cors"; // Thêm vào
