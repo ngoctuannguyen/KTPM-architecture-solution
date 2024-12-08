@@ -142,32 +142,32 @@ shorturl-service/
 ├── .env                  # Cấu hình môi trường
 ```
 ### Thí nghiệm và đánh giá
-- Công cụ sử dụng: [Load Testing Artillery](https://www.artillery.io/)
-- Các chiến lược test:
+Công cụ sử dụng: [Load Testing Artillery](https://www.artillery.io/)
+#### Các chiến lược test ####
 
-    <b>1. Kết quả khi sử dụng phần code được cung cấp</b>
-    - GET: 
-    ![image](res\get_without_optimization.png)
-    - POST: 
-    ![image](res\post_without_optimization.png)
+<b>1. Kết quả khi sử dụng phần code được cung cấp</b>
+- GET: 
+![image](res\get_without_optimization.png)
+- POST: 
+![image](res\post_without_optimization.png)
 
-    <b>2. Kết quả khi đã thực hiện tối ưu code và kiến trúc</b>
-    - GET: 
-    ![image](res\get_with_optimization.png)
-    - POST: 
-    ![image](res\post_with_optimization.png)
+<b>2. Kết quả khi đã thực hiện tối ưu code và kiến trúc</b>
+- GET: 
+![image](res\get_with_optimization.png)
+- POST: 
+![image](res\post_with_optimization.png)
 
-    <b>3. Kết quả khi không sử dụng Rate Limit</b>
-    - GET: 
-    ![image](res\get_without_ratelimit.png)
-    - POST: 
-    ![image](res\post_without_ratelimit.png)
+<b>3. Kết quả khi không sử dụng Rate Limit</b>
+- GET: 
+![image](res\get_without_ratelimit.png)
+- POST: 
+![image](res\post_without_ratelimit.png)
 
-    <b>4. Kết quả khi không sử dụng Cache-Aside</b>
-    - GET: 
-    ![image](res\get_without_cache.png)
-    - POST: 
-    ![image](res\post_without_cache.png)
-    
+<b>4. Kết quả khi không sử dụng Cache-Aside</b>
+- GET: 
+![image](res\get_without_cache.png)
+- POST: 
+![image](res\post_without_cache.png)
+
 
 
