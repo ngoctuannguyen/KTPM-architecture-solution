@@ -26,7 +26,6 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
 
    ```bash
    git clone https://github.com/ngoctuannguyen/KTPM-architecture-solution.git
-   cd shorturl-service
    ```
 
 2. Cài đặt các package cần thiết:
@@ -48,10 +47,20 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
    ```
 
 4. Chạy ứng dụng:
+   
+   <b>Frontend:</b>
    ```bash
-   npm start
+   cd client
+   npm run dev
    ```
-   Ứng dụng sẽ chạy ở [http://localhost:3000](http://localhost:3000).
+   Frontend server sẽ chạy ở [http://localhost:5173](http://localhost:5173).
+
+   <b>Backend:</b>
+   ```bash
+   cd server
+   npm run dev
+   ```
+   Backend server sẽ chạy ở [http://localhost:3000](http://localhost:3000).
 
 ## API Endpoints
 
@@ -119,7 +128,6 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
         - Giảm độ trễ khi lấy dữ liệu nếu dữ liệu đã có trong cache.
         - Dữ liệu cũ tự động hết hạn, giảm nguy cơ dữ liệu không nhất quán.
         - Giảm tải cho Database MongoDB.
-    4. Gateway Routing
 
 5. **Refactor code**
 
@@ -171,14 +179,17 @@ Sau khi thực hiện test với 50000 request trong 50s, nhóm có kết quả 
 ![image](res\post_without_cache.png)
 
 #### Đánh giá ####
-1. Thời gian phản hồi trung bình - POST
+1. <b>Thời gian phản hồi trung bình - POST </b>
 ![image](res\mean_post.png)
 
 - Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của POST request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc có nhiều link giống nhau sẽ chỉ mang một ID duy nhất mà không phải mất thời gian tạo ID mới.
 
-2. Thời gian phản hồi trung bình - GET
+2. <b>Thời gian phản hồi trung bình - GET</b>
 ![image](res\mean_get.png)
 
 - Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của GET request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc đọc ở trên Cache diễn ra rất nhanh
 - Hơn nữa, việc sử dụng Rate Limiting góp phần đáng kể vào thời gian phản hồi so với việc không sử dụng Rate Limiting.
+
+3. <b>Tác động của Rate Limiting tới số lượng request gửi cho hệ thống </b>
+- Dựa vào những số liệu về request_rate được cung cấp ở trên, ta thấy việc sử dụng Rate Limiting giúp giảm đáng kể số lượng request từ 1000 xuống 857 request/s.
 
