@@ -1,10 +1,10 @@
+//server.js
 import express from "express";
 import { shortUrl, findOrigin } from "./utils.js";
 import cors from "cors"; // Thêm vào
 // const { connectRedis, getCache } = require("./src/helpers/redis");
 import rateLimiterMiddleware from "./src/helpers/rateLimiter.js";
 import { fetchWithRetry } from "./src/helpers/retry.js";
-
 
 const app = express();
 const port = 3000;
@@ -38,8 +38,6 @@ app.get("/short/:id", async (req, res) => {
 app.post("/create", async (req, res) => {
   try {
     const { url } = req.body;
-    const message = req.body;
-    console.log(message);
     // console.log(req.body);
     if (!url) {
       return res.status(400).json({ error: "URL is required" });

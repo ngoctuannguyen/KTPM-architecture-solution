@@ -1,17 +1,10 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
 dotenv.config();
-
 // Kết nối MongoDB
+const mongodbUri = process.env.MONGODB_URI;
 mongoose
-  .connect(
-    // process.env.MONGO_URI, {
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
-    // }
-    "mongodb+srv://ngoctuannguyen1980123:Ngocchemgio2@cluster0.sobpy1m.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-  )
+  .connect(mongodbUri)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("Failed to connect to MongoDB:", err));
 

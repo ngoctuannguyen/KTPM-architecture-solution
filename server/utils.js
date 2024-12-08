@@ -1,3 +1,4 @@
+//utils.js
 import { URLModel } from "./src/helpers/mongodb.js";
 import { setCache, getCache } from "./src//helpers/redis.js";
 import { connectRedis } from "./src/helpers/redis.js";
@@ -32,9 +33,9 @@ ensureRedisConnection();
 // Tìm URL gốc từ short ID
 async function findOrigin(id) {
   try {
-    console.log("Finding origin for ID:", id);
+    // console.log("Finding origin for ID:", id);
     // Kiểm tra Redis cache trước
-    const cachedUrl = await getCache(id);
+    let cachedUrl = await getCache(id);
     if (cachedUrl) {
       return cachedUrl;
     }
@@ -42,10 +43,10 @@ async function findOrigin(id) {
     // Nếu không có trong Redis, truy vấn MongoDB
     const doc = await URLModel.findOne({ id });
     if (!doc) return null;
-
+    cachedUrl = doc.url;
     // Lưu vào Redis cache
     await setCache(id, doc.url);
-    return doc.url;
+    return cachedUrl;
   } catch (err) {
     throw new Error("Error finding origin: " + err.message);
   }
@@ -53,12 +54,7 @@ async function findOrigin(id) {
 
 // Kiểm tra URL hợp lệ
 function isValidUrl(url) {
-  try {
-    new URL(url);
-    return true;
-  } catch (_) {
-    return false;
-  }
+  return /^https?:\/\//.test(url); // Chỉ kiểm tra các URL bắt đầu với http:// hoặc https://
 }
 
 // Tạo short URL
@@ -68,9 +64,9 @@ async function create(id, url) {
       throw new Error("Invalid URL provided.");
     }
     const newEntry = new URLModel({ id, url });
+
     await newEntry.save();
     console.log("Created new short URL:", id);
-    console.log(url);
     // Lưu vào Redis cache
     await setCache(id, url);
 
@@ -85,10 +81,13 @@ async function shortUrl(url) {
   try {
     const cachedId = await getCache(url);
     if (cachedId) {
+      // console.log("Found in cache:", cachedId);
       return cachedId; // Trả về ID nếu URL đã tồn tại trong cache
     }
     const existingEntry = await URLModel.findOne({ url });
     if (existingEntry) {
+      // Lưu vào Redis cache
+      await setCache(existingEntry.id, url);
       return existingEntry.id; // Trả về ID nếu URL đã tồn tại
     }
     // while (true) {
