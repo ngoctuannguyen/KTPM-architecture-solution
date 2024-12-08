@@ -33,7 +33,7 @@ ensureRedisConnection();
 // Tìm URL gốc từ short ID
 async function findOrigin(id) {
   try {
-    console.log("Finding origin for ID:", id);
+    // console.log("Finding origin for ID:", id);
     // Kiểm tra Redis cache trước
     let cachedUrl = await getCache(id);
     if (cachedUrl) {
@@ -81,13 +81,13 @@ async function shortUrl(url) {
   try {
     const cachedId = await getCache(url);
     if (cachedId) {
-      console.log("Found in cache:", cachedId);
+      // console.log("Found in cache:", cachedId);
       return cachedId; // Trả về ID nếu URL đã tồn tại trong cache
     }
     const existingEntry = await URLModel.findOne({ url });
     if (existingEntry) {
       // Lưu vào Redis cache
-      await setCache(url, existingEntry.id);
+      await setCache(existingEntry.id, url);
       return existingEntry.id; // Trả về ID nếu URL đã tồn tại
     }
     // while (true) {
