@@ -147,14 +147,27 @@ shorturl-service/
 
     <b>1. Kết quả khi sử dụng phần code được cung cấp</b>
     - GET: 
-    ![](res\get_without_optimization.png)
+    ![image](res\get_without_optimization.png)
     - POST: 
-    ![](res\post_without_optimization.png)
+    ![image](res\post_without_optimization.png)
 
     <b>2. Kết quả khi đã thực hiện tối ưu code và kiến trúc</b>
     - GET: 
-    ![](res\get_with_optimization.png)
+    ![image](res\get_with_optimization.png)
     - POST: 
-    ![](res\post_with_optimization.png)
+    ![image](res\post_with_optimization.png)
 
+    <b>3. Kết quả khi không sử dụng Rate Limit</b>
+    - GET: 
+    ![image](res\get_without_ratelimit.png)
+    - POST: 
+    ![image](res\post_without_ratelimit.png)
+
+    <b>4. Kết quả khi không sử dụng Cache-Aside</b>
+    - GET: 
+    ![image](res\get_without_cache.png)
+    - POST: 
+    ![image](res\post_without_cache.png)
     
+
+
