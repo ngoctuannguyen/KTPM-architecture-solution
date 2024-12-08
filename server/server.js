@@ -3,6 +3,8 @@ import { shortUrl, findOrigin } from "./utils.js";
 import cors from "cors"; // Thêm vào
 // const { connectRedis, getCache } = require("./src/helpers/redis");
 import rateLimiterMiddleware from "./src/helpers/rateLimiter.js";
+import { fetchWithRetry } from "./src/helpers/retry.js";
+
 
 const app = express();
 const port = 3000;
@@ -21,7 +23,7 @@ app.use(rateLimiterMiddleware);
 app.get("/short/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const url = await findOrigin(id);
+    const url = await fetchWithRetry(() => findOrigin(id));
     if (url == null) {
       res.status(404).send("<h1>404 Not Found</h1>");
     } else {
@@ -42,7 +44,7 @@ app.post("/create", async (req, res) => {
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
     }
-    const newID = await shortUrl(url);
+    const newID = await fetchWithRetry(() => shortUrl(url));
     res.status(201).json({ id: newID });
   } catch (err) {
     res.status(500).json({ error: err.message });

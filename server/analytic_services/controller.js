@@ -2,9 +2,8 @@ import KafkaConfig from "./config.js";
 
 const sendMessageToKafka = async (req, res) => {
   try {
-    const { message } = req.body;
-    console.log(message, " ", req.body);
-    const messages = [{ value: JSON.stringify(req.body) }];
+    const message = req.body;
+    const messages = [{ value: JSON.stringify(message) }];
     const kafkaConfig = new KafkaConfig();
     console.log(messages);
 

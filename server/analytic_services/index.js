@@ -9,13 +9,6 @@ app.use(express.json());  // For parsing application/json
 app.use(express.urlencoded({ extended: false })); 
 
 app.post("/api/send", constrollers.sendMessageToKafka);
-// app.post('/', (req, res) => {
-//   const { message } = req.body;
-//   console.log(message, " ", req.body);
-
-//   // Call the controller function to handle Kafka message production
-//   controllers.sendMessageToKafka(req, res);
-// });
 
 // consume from topic "test-topic"
 const kafkaConfig = new KafkaConfig();
