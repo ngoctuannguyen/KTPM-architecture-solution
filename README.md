@@ -113,7 +113,9 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
    2. [Retry](server\src\helpers\retry.js)
    - Sử dụng mẫu thiết kế này nhằm đảm bảo việc thực thi lại một thao tác nếu thao tác đó thất bại do các lỗi tạm thời, đặc biệt hữu ích khi làm việc với các hệ thống không đồng bộ hoặc phân tán.
    3. Cache-Aside
-   ![image](res\cache.png)
+   <p>
+    <img src="res/cache.png" width="auto" height="auto" />
+   </p>
    - Công nghệ sử dụng: Redis
    - Cơ chế: 
         - Read-Through (Đọc dữ liệu):
@@ -134,7 +136,11 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
    - Sử dụng `Array.from` thay vì vòng lặp trong hàm `makeID` để tăng hiệu suất và đọc dễ hơn ([Hàm makeID](server\utils.js)).
    - Sửa lỗi logic trong vòng lặp vô hạn khi tạo ID, giới hạn số lần thử. ([Dòng 104 trong hàm shortURL](server\utils.js)).
 
-6. **Hỗ trợ CORS**
+6. **Thêm persistent Layer sử dụng ORM**
+   - Sử dụng thư viện Sequelize để định nghĩa Schema cho model Link.
+   - Sử dụng ORM để viết hai hàm findOriginORM và createORM trong (branch main và trong file utils của code ban đầu).
+
+7. **Hỗ trợ CORS**
    - Thêm middleware `cors` để hỗ trợ các ứng dụng web tích hợp.
 
 ## Cấu trúc dự án
@@ -155,37 +161,72 @@ Công cụ sử dụng: [Load Testing Artillery](https://www.artillery.io/)
 Sau khi thực hiện test với 50000 request trong 50s, nhóm có kết quả như sau:
 
 <b>1. Kết quả khi sử dụng phần code được cung cấp</b>
-- GET: 
-![image](res\get_without_optimization.png)
+- GET:
+<p>
+    <img src="res/get_without_optimization.png" width="auto" height="auto" />
+</p>
+
 - POST: 
-![image](res\post_without_optimization.png)
+
+<p>
+    <img src="res/post_without_optimization.png" width="auto" height="auto" />
+</p>
 
 <b>2. Kết quả khi đã thực hiện tối ưu code và kiến trúc</b>
 - GET: 
-![image](res\get_with_optimization.png)
+<p>
+    <img src="res/get_with_optimization.png" width="auto" height="auto" />
+</p>
+
 - POST: 
-![image](res\post_with_optimization.png)
+
+<p>
+    <img src="res/post_with_optimization.png" width="auto" height="auto" />
+</p>
 
 <b>3. Kết quả khi không sử dụng Rate Limit</b>
 - GET: 
-![image](res\get_without_ratelimit.png)
+
+<p>
+    <img src="res/get_without_ratelimit.png" width="auto" height="auto" />
+</p>
+
 - POST: 
-![image](res\post_without_ratelimit.png)
+
+<p>
+    <img src="res/post_without_ratelimit.png" width="auto" height="auto" />
+</p>
+
 
 <b>4. Kết quả khi không sử dụng Cache-Aside</b>
 - GET: 
-![image](res\get_without_cache.png)
+
+<p>
+    <img src="res/get_without_cache.png" width="auto" height="auto" />
+</p>
+
 - POST: 
-![image](res\post_without_cache.png)
+
+<p>
+    <img src="res/post_without_cache.png" width="auto" height="auto" />
+</p>
 
 #### Đánh giá ####
 1. <b>Thời gian phản hồi trung bình - POST </b>
-![image](res\mean_post.png)
+
+<p>
+    <img src="res/mean_post.png" width="auto" height="auto" />
+</p>
+
 
 - Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của POST request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc có nhiều link giống nhau sẽ chỉ mang một ID duy nhất mà không phải mất thời gian tạo ID mới.
 
 2. <b>Thời gian phản hồi trung bình - GET</b>
-![image](res\mean_get.png)
+
+<p>
+    <img src="res/mean_get.png" width="auto" height="auto" />
+</p>
+
 
 - Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của GET request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc đọc ở trên Cache diễn ra rất nhanh
 - Hơn nữa, việc sử dụng Rate Limiting góp phần đáng kể vào thời gian phản hồi so với việc không sử dụng Rate Limiting.
