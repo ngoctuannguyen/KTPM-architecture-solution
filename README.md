@@ -144,6 +144,7 @@ shorturl-service/
 ### Thí nghiệm và đánh giá
 Công cụ sử dụng: [Load Testing Artillery](https://www.artillery.io/)
 #### Các chiến lược test ####
+Sau khi thực hiện test với 50000 request trong 50s, nhóm có kết quả như sau:
 
 <b>1. Kết quả khi sử dụng phần code được cung cấp</b>
 - GET: 
@@ -169,5 +170,15 @@ Công cụ sử dụng: [Load Testing Artillery](https://www.artillery.io/)
 - POST: 
 ![image](res\post_without_cache.png)
 
+#### Đánh giá ####
+1. Thời gian phản hồi trung bình - POST
+![image](res\mean_post.png)
 
+- Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của POST request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc có nhiều link giống nhau sẽ chỉ mang một ID duy nhất mà không phải mất thời gian tạo ID mới.
+
+2. Thời gian phản hồi trung bình - GET
+![image](res\mean_get.png)
+
+- Kết quả cho thấy khi thực hiện tối ưu code và kiến trúc thì thời gian phản hồi của GET request được giảm đi rất nhiều so với ban đầu và so với khi không sử dụng Cache. Lý do là hệ thống đã được sử dụng Cache nên việc đọc ở trên Cache diễn ra rất nhanh
+- Hơn nữa, việc sử dụng Rate Limiting góp phần đáng kể vào thời gian phản hồi so với việc không sử dụng Rate Limiting.
 
