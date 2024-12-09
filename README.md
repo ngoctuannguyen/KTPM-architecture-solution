@@ -140,7 +140,7 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
 
 6. **Thêm persistent Layer sử dụng ORM**
    - Sử dụng thư viện Sequelize để định nghĩa Schema cho model Link.
-   - Sử dụng ORM để viết hai hàm findOriginORM và createORM trong (branch main và trong file utils của code ban đầu).
+   - Sử dụng ORM để viết hai hàm findOriginORM và createORM trong [branch main và trong file utils của code ban đầu](https://github.com/ngoctuannguyen/KTPM-architecture-solution/blob/main/CS1/utils.js).
 
 7. **Hỗ trợ CORS**
    - Thêm middleware `cors` để hỗ trợ các ứng dụng web tích hợp.
