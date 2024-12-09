@@ -116,7 +116,9 @@ ShortURL Service là một ứng dụng rút gọn URL hiệu quả, tối ưu h
    <p>
     <img src="res/cache.png" width="auto" height="auto" />
    </p>
+
    - Công nghệ sử dụng: Redis
+   
    - Cơ chế: 
         - Read-Through (Đọc dữ liệu):
         Khi ứng dụng cần một dữ liệu, nó sẽ kiểm tra xem dữ liệu đã có trong cache chưa.
